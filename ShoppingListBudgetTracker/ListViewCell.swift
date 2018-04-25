@@ -29,6 +29,6 @@ import UIKit
 import CoreData
 
 class ListViewCell : UITableViewCell {
-    @IBOutlet weak var name: UILabel!;
-    @IBOutlet weak var budget: UILabel!;
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var budget: UILabel!
 }

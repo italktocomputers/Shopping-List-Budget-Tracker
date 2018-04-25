@@ -29,6 +29,6 @@ import UIKit
 import CoreData
 
 class ItemViewCell : UITableViewCell {
-    @IBOutlet weak var name: UILabel!;
-    @IBOutlet weak var price: UILabel!;
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var price: UILabel!
 }

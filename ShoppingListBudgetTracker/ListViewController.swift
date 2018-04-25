@@ -29,33 +29,40 @@ import CoreData
 
 class ListViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
-    var lists = [List]();
+    var lists = [List]()
     
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated);
-        self.lists = self.getLists()!;
+        super.viewWillAppear(animated)
+        self.lists = self.getLists()!
     }
     
     @IBAction func addName(sender: AnyObject) {
-        self.showAddName();
+        self.showAddName()
     }
     
     // show add name alert box
     func showAddName() {
-        var alert = UIAlertController(title: "Add a new list", message: "Name of list:", preferredStyle: UIAlertControllerStyle.Alert);
+        var alert = UIAlertController(
+            title: "Add a new list",
+            message: "Name of list:",
+            preferredStyle: UIAlertControllerStyle.Alert
+        )
         
         // save button
-        let saveAction = UIAlertAction(title: "Save", style: UIAlertActionStyle.Default, {
-            (action: UIAlertAction!) -> Void in
-            // save button clicked so get name, show budget alert box
-            let textField = alert.textFields![0] as UITextField;
-            self.showAddBudget(textField.text);
-        });
+        let saveAction = UIAlertAction(
+            title: "Save",
+            style: UIAlertActionStyle.Default, {(action: UIAlertAction!) -> Void in
+                // save button clicked so get name, show budget alert box
+                let textField = alert.textFields![0] as UITextField
+                self.showAddBudget(textField.text)
+            }
+        )
         
         // cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, {
-            (action: UIAlertAction!) -> Void in
-        });
+        let cancelAction = UIAlertAction(
+            title: "Cancel",
+            style: UIAlertActionStyle.Default, {(action: UIAlertAction!) -> Void in
+        })
         
         // textbox configuration
         alert.addTextFieldWithConfigurationHandler {
@@ -63,101 +70,107 @@ class ListViewController: UIViewController, UITableViewDataSource {
         }
         
         // add buttons to alert box
-        alert.addAction(saveAction);
-        alert.addAction(cancelAction);
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
         
         // show alert box
-        presentViewController(alert, animated: true, completion: nil);
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     // show add budget alert box
     func showAddBudget(name:String) {
-        var alert = UIAlertController(title: "Add budget", message: "Add a budget for " + name + ":", preferredStyle: UIAlertControllerStyle.Alert)
+        var alert = UIAlertController(
+            title: "Add budget",
+            message: "Add a budget for " + name + ":",
+            preferredStyle: UIAlertControllerStyle.Alert
+        )
         
         // save button
-        let saveAction = UIAlertAction(title: "Save", style: UIAlertActionStyle.Default, {
-            (action: UIAlertAction!) -> Void in
-            // save button clicked, save list
-            let textField = alert.textFields![0] as UITextField;
-            let budget = NSString(string: textField.text);
-            
-            self.addList(name, budget: budget.doubleValue);
-            self.tableView.reloadData();
-        });
+        let saveAction = UIAlertAction(
+            title: "Save",
+            style: UIAlertActionStyle.Default, {(action: UIAlertAction!) -> Void in
+                // save button clicked, save list
+                let textField = alert.textFields![0] as UITextField
+                let budget = NSString(string: textField.text)
+                
+                self.addList(name, budget: budget.doubleValue)
+                self.tableView.reloadData()
+            }
+        )
         
         // cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, {
-            (action: UIAlertAction!) -> Void in
-        });
+        let cancelAction = UIAlertAction(
+            title: "Cancel",
+            style: UIAlertActionStyle.Default, {(action: UIAlertAction!) -> Void in}
+        )
         
         // text box configuration
-        alert.addTextFieldWithConfigurationHandler {
-            (textField: UITextField!) -> Void in
+        alert.addTextFieldWithConfigurationHandler {(textField: UITextField!) -> Void in
             // they are entering a price so show the decimal keyboard
-            textField.keyboardType = UIKeyboardType.DecimalPad;
+            textField.keyboardType = UIKeyboardType.DecimalPad
         }
         
         // add buttons to alert box
-        alert.addAction(saveAction);
-        alert.addAction(cancelAction);
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
         
         // show alert box
-        presentViewController(alert, animated: true, completion: nil);
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     func addList(name: String, budget: Double) {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate;
-        let managedContext = appDelegate.managedObjectContext!;
-        let entity =  NSEntityDescription.entityForName("List", inManagedObjectContext: managedContext);
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let managedContext = appDelegate.managedObjectContext!
+        let entity =  NSEntityDescription.entityForName("List", inManagedObjectContext: managedContext)
         
         // create a new list object
-        let list = NSManagedObject(entity: entity!, insertIntoManagedObjectContext:managedContext) as List;
-        list.name = name;
-        list.budget = budget;
+        let list = NSManagedObject(entity: entity!, insertIntoManagedObjectContext:managedContext) as List
+        list.name = name
+        list.budget = budget
         
         var error: NSError?
-        if (!managedContext.save(&error)) {
-            println("Could not save \(error), \(error?.userInfo)");
+        if !managedContext.save(&error) {
+            println("Could not save \(error), \(error?.userInfo)")
         }
         
         // update our lists array with our new list
-        self.lists.append(list);
+        self.lists.append(list)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lists.count;
+        return lists.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let identifier = "ListViewCell";
-        let item = self.lists[indexPath.row] as List;
+        let identifier = "ListViewCell"
+        let item = self.lists[indexPath.row] as List
         
-        var cell: ListViewCell? = tableView.dequeueReusableCellWithIdentifier(identifier) as? ListViewCell;
+        var cell: ListViewCell? = tableView.dequeueReusableCellWithIdentifier(identifier) as? ListViewCell
         
-        if (cell? == nil) {
-            cell = ListViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier:identifier);
+        if cell? == nil {
+            cell = ListViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier:identifier)
         }
         
-        let budget: Double? = item.valueForKey("budget") as Double?;
+        let budget: Double? = item.valueForKey("budget") as Double?
         
-        cell!.name.text = item.valueForKey("name") as String?;
-        cell!.budget.text = String(format:"%.2f", budget!);
+        cell!.name.text = item.valueForKey("name") as String?
+        cell!.budget.text = String(format:"%.2f", budget!)
         
-        return cell!;
+        return cell!
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // user clicked on a list so we should show the items in the list
-        let storyboard = UIStoryboard(name: "Main", bundle: nil);
-        let vc = storyboard.instantiateViewControllerWithIdentifier("NavItemViewController") as UINavigationController;
-        let item = self.lists[indexPath.row] as List;
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("NavItemViewController") as UINavigationController
+        let item = self.lists[indexPath.row] as List
         
         // pass selected list to items controller
-        let controller = vc.topViewController as ItemViewController;
-        controller.setList(item);
+        let controller = vc.topViewController as ItemViewController
+        controller.setList(item)
         
         // show items controller
-        self.presentViewController(vc, animated: true, completion: nil);
+        self.presentViewController(vc, animated: true, completion: nil)
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -166,32 +179,32 @@ class ListViewController: UIViewController, UITableViewDataSource {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         // delete list
-        var error: NSErrorPointer = NSErrorPointer();
+        var error: NSErrorPointer = NSErrorPointer()
         
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate;
-        let managedContext = appDelegate.managedObjectContext!;
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let managedContext = appDelegate.managedObjectContext!
         
-        managedContext.deleteObject(self.lists[indexPath.row]);
-        managedContext.save(error);
+        managedContext.deleteObject(self.lists[indexPath.row])
+        managedContext.save(error)
         
-        self.reloadTable();
+        self.reloadTable()
     }
     
     func getLists() -> [List]? {
         // get list from Core Data
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate;
-        let managedContext = appDelegate.managedObjectContext!;
-        let fetchRequest = NSFetchRequest(entityName:"List");
-        var error: NSError?;
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let managedContext = appDelegate.managedObjectContext!
+        let fetchRequest = NSFetchRequest(entityName:"List")
+        var error: NSError?
         
-        let fetchedResults = managedContext.executeFetchRequest(fetchRequest, error: &error) as [List]?;
+        let fetchedResults = managedContext.executeFetchRequest(fetchRequest, error: &error) as [List]?
         
-        return fetchedResults;
+        return fetchedResults
     }
     
     func reloadTable() {
-        self.lists = self.getLists()!;
-        self.tableView.reloadData();
+        self.lists = self.getLists()!
+        self.tableView.reloadData()
     }
     
 }

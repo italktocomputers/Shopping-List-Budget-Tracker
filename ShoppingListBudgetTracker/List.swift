@@ -29,8 +29,8 @@ import CoreData
 
 class List: NSManagedObject {
 
-    @NSManaged var budget: NSNumber;
-    @NSManaged var name: String;
-    @NSManaged var item: NSSet;
+    @NSManaged var budget: NSNumber
+    @NSManaged var name: String
+    @NSManaged var item: NSSet
 
 }

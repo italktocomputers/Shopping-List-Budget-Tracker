@@ -29,8 +29,8 @@ import CoreData
 
 class Item: NSManagedObject {
 
-    @NSManaged var name: String;
-    @NSManaged var price: NSNumber;
-    @NSManaged var list: List;
+    @NSManaged var name: String
+    @NSManaged var price: NSNumber
+    @NSManaged var list: List
 
 }
